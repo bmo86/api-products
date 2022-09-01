@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"crud-t/handlers"
 	"crud-t/server"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
@@ -39,6 +41,7 @@ func main(){
 }
 
 func BindRoutes(s server.Server, r *mux.Router){
-
+	
+	r.HandleFunc("/", handlers.HandlerHome(s)).Methods(http.MethodGet)
 
 }
