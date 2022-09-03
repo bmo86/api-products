@@ -1,8 +1,16 @@
 package repository
 
+import (
+	"context"
+	"crud-t/models"
+)
+
 
 type Repo interface{
+	
+	NewUser(ctx context.Context,  user *models.User) error
 	Close() error
+
 }
 
 var implementation Repo
@@ -15,4 +23,8 @@ func SetRepo(repo Repo)  {
 //close connection db
 func Close() error {
 	return implementation.Close()
+}
+
+func NewUser(ctx context.Context, user models.User) error{
+	return implementation.NewUser(ctx, &user)
 }

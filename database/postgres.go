@@ -1,8 +1,11 @@
 package database
 
 import (
-	_ "github.com/lib/pq"
+	"context"
+	"crud-t/models"
 	"database/sql"
+
+	_ "github.com/lib/pq"
 )
 
 type PostgresRepository struct{
@@ -22,4 +25,9 @@ func NewPostgresRepo(url string) (*PostgresRepository, error)  {
 
 func (repo *PostgresRepository) Close() error{
 	return repo.db.Close()
+}
+
+func(repo *PostgresRepository) NewUser(ctx context.Context, user *models.User) error{
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO users (id, email, pass, name, lastname, date_brithday) VALUES ($1, $2, $3, $4, $5, $6)", user.Id, user.Email, user.Pass, user.Name, user.LastName, user.DateBrithday) 
+	return err
 }
