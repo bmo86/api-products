@@ -27,10 +27,11 @@ func shouldCheckToken(r string) bool  {
 
 
 func checkAuthMiddleware(s server.Server) func (http.Handler) http.Handler  {
-	return func(h http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			
 			if !shouldCheckToken(r.URL.Path){
-				h.ServeHTTP(w, r)
+				next.ServeHTTP(w, r)
 				return
 			}
 
@@ -39,7 +40,7 @@ func checkAuthMiddleware(s server.Server) func (http.Handler) http.Handler  {
 				http.Error(w, err.Error(), http.StatusUnauthorized)
 				return
 			}
-			h.ServeHTTP(w, r)
+			next.ServeHTTP(w, r)
 		})
 	}
 }

@@ -35,8 +35,8 @@ func main(){
 	if err != nil {
 		log.Fatal(err)
 	}
-	s.Start(BindRoutes)
 
+	s.Start(BindRoutes)
 
 }
 
