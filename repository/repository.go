@@ -9,6 +9,8 @@ import (
 type Repo interface{
 	
 	NewUser(ctx context.Context,  user *models.User) error
+	GetByIdUser(ctx context.Context, id string) (*models.User, error)
+	GetByEmailUser(ctx context.Context, email string) (*models.User, error)
 	Close() error
 
 }
@@ -27,4 +29,12 @@ func Close() error {
 
 func NewUser(ctx context.Context, user models.User) error{
 	return implementation.NewUser(ctx, &user)
+}
+
+func GetByIdUser(ctx context.Context, id string) (*models.User, error){
+	return implementation.GetByIdUser(ctx, id)
+}
+
+func GetByEmailUser(ctx context.Context, email string) (*models.User, error){
+	return implementation.GetByEmailUser(ctx, email)
 }
