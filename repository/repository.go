@@ -11,6 +11,7 @@ type Repo interface{
 	NewUser(ctx context.Context,  user *models.User) error
 	GetByIdUser(ctx context.Context, id string) (*models.User, error)
 	GetByEmailUser(ctx context.Context, email string) (*models.User, error)
+	ListUser(ctx context.Context, page uint64) ([]*models.User, error)
 	Close() error
 
 }
@@ -37,4 +38,8 @@ func GetByIdUser(ctx context.Context, id string) (*models.User, error){
 
 func GetByEmailUser(ctx context.Context, email string) (*models.User, error){
 	return implementation.GetByEmailUser(ctx, email)
+}
+
+func ListUser(ctx context.Context, page uint64) ([]*models.User, error){
+	return implementation.ListUser(ctx, page)
 }
