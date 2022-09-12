@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/gorilla/mux"
 	"github.com/segmentio/ksuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -35,6 +36,19 @@ type SinUpResponse struct{
 type LoginResposne struct{
 	Token string `json:"token"`
 }
+
+type UpsertUpdateRequest struct{
+	Email 		 string `json:"email"`
+	Pass  		 string `json:"pass"`
+	Name 		 string `json:"name"`
+	LastName 	 string `json:"last_name"`
+	DateBrithday time.Time `json:"date_brithday"`
+}
+
+type msgResponse struct{
+	msg string `json:"msg"`
+}
+
 
 func SingUpHandler(s server.Server) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -159,3 +173,52 @@ func HandlerMe(s server.Server) http.HandlerFunc  {
 }
 
 
+func UpdateUserHandler( s server.Server) http.HandlerFunc  {
+	return func(w http.ResponseWriter, r *http.Request) {
+		
+		idP := mux.Vars(r)
+
+		token, err := means.Token(s, w, r)
+		
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return 
+		}
+		
+
+		// '_' == claims
+		if _, ok := token.Claims.(*models.AppClaims); ok && token.Valid { 
+			var userReq = UpsertUpdateRequest{}
+
+			if err := json.NewDecoder(r.Body).Decode(&userReq); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return 
+			}
+
+		updateUser := models.User{
+			Id: 			idP["idUser"],
+			Email: 			userReq.Email,
+			Pass:  			userReq.Pass,	
+			Name: 			userReq.Name,
+			LastName: 		userReq.LastName,
+			DateBrithday: 	userReq.DateBrithday,
+
+		}
+
+		err = repository.UpdateUser(r.Context(), &updateUser)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(msgResponse{
+			msg: "USER UPDATE =)",
+		})
+
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+	}
+}

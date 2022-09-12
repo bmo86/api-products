@@ -117,3 +117,12 @@ func (repo *PostgresRepository) ListUser(ctx context.Context, page uint64) ([]*m
 
 	return users, nil
 }
+
+
+func (repo *PostgresRepository) UpdateUser(ctx context.Context,  user *models.User) (error) {
+	var query string
+	query = "UPDATE users SET  email = $1, pass = $2, name = $3, lastname = $4, date_brithday = $5 WHERE id = $6"
+	_, err := repo.db.ExecContext(ctx, query , user.Email, user.Pass, user.Name, user.LastName, user.DateBrithday, user.Id)
+	return err
+}
+
