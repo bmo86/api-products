@@ -46,7 +46,7 @@ type UpsertUpdateRequest struct{
 }
 
 type msgResponse struct{
-	msg string `json:"msg"`
+	Msg string `json:"msg"`
 }
 
 
@@ -213,7 +213,7 @@ func UpdateUserHandler( s server.Server) http.HandlerFunc  {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(msgResponse{
-			msg: "USER UPDATE =)",
+			Msg: "USER UPDATE =)",
 		})
 
 		} else {
