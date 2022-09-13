@@ -86,7 +86,7 @@ func (hub *Hub) onDisconnects (cli *Client){
 
 
 
-func (h *Hub) handlerWs(w http.ResponseWriter, r *http.Request){
+func (h *Hub) HandlerWs(w http.ResponseWriter, r *http.Request){
 
 	socket, err := upgrader.Upgrade(w, r, nil)
 	if err != nil { 

@@ -26,7 +26,7 @@ func shouldCheckToken(r string) bool  {
 }
 
 
-func checkAuthMiddleware(s server.Server) func (http.Handler) http.Handler  {
+func CheckAuthMiddleware(s server.Server) func (http.Handler) http.Handler  {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			

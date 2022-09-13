@@ -7,6 +7,7 @@ import (
 	"crud-t/server"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -221,4 +222,36 @@ func UpdateUserHandler( s server.Server) http.HandlerFunc  {
 		}
 
 	}
+}
+
+func ListUserHandler (s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		var err error
+
+		pageStr := r.URL.Query().Get("page")
+		var page = uint64(0)
+
+		if pageStr != "" {
+			page, err = strconv.ParseUint(pageStr, 10, 64)
+			
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+		}
+
+		users, err := repository.ListUser(r.Context(), page)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(users)
+
+	}
+
 }
