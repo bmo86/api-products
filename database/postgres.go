@@ -126,3 +126,7 @@ func (repo *PostgresRepository) UpdateUser(ctx context.Context,  user *models.Us
 	return err
 }
 
+func  (repo *PostgresRepository) DeleteUser(ctx context.Context, id string) (error){
+	_, err := repo.db.ExecContext(ctx, "DELETE FROM users WHERE id = $1", id)
+	return err
+}

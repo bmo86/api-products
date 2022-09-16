@@ -197,7 +197,7 @@ func UpdateUserHandler( s server.Server) http.HandlerFunc  {
 			}
 
 		updateUser := models.User{
-			Id: 			idP["idUser"],
+			Id: 			idP["userID"],
 			Email: 			userReq.Email,
 			Pass:  			userReq.Pass,	
 			Name: 			userReq.Name,
@@ -224,7 +224,7 @@ func UpdateUserHandler( s server.Server) http.HandlerFunc  {
 	}
 }
 
-func ListUserHandler (s server.Server) http.HandlerFunc {
+func ListUserHandler( s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var err error
@@ -254,4 +254,35 @@ func ListUserHandler (s server.Server) http.HandlerFunc {
 
 	}
 
+}
+
+func DeleteUserHandler( s server.Server ) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		id := mux.Vars(r)
+
+		token, err := means.Token(s ,w , r)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		if _, ok := token.Claims.(*models.AppClaims); ok && token.Valid{
+			err = repository.DeleteUser(r.Context(), id["userID"])
+			
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(msgResponse{
+				Msg: "Users Delete!",
+			})
+		
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
 }

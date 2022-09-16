@@ -43,15 +43,17 @@ func main(){
 
 func BindRoutes(s server.Server, r *mux.Router){
 	
+	api := r.PathPrefix("/api/v1").Subrouter()
 
-	r.Use(middleware.CheckAuthMiddleware(s))
+	api.Use(middleware.CheckAuthMiddleware(s))
 
 	r.HandleFunc("/", handlers.HandlerHome(s)).Methods(http.MethodGet)
 	r.HandleFunc("/singup", handlers.SingUpHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/login", handlers.HandlerLogin(s)).Methods(http.MethodPost)
-	r.HandleFunc("/me", handlers.HandlerMe(s)).Methods(http.MethodGet)
-	r.HandleFunc("/updateUsers", handlers.UpdateUserHandler(s)).Methods(http.MethodPost)
-	r.HandleFunc("/users", handlers.ListUserHandler(s)).Methods(http.MethodGet)
+	api.HandleFunc("/me", handlers.HandlerMe(s)).Methods(http.MethodGet)
+	api.HandleFunc("/users/{userID}", handlers.UpdateUserHandler(s)).Methods(http.MethodPut)
+	api.HandleFunc("/users/{userID}", handlers.DeleteUserHandler(s)).Methods(http.MethodDelete)
+	r.HandleFunc("/api/v1/users", handlers.ListUserHandler(s)).Methods(http.MethodGet)
 
 	r.HandleFunc("/ws", s.Hub().HandlerWs)
 }

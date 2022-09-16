@@ -13,6 +13,7 @@ type Repo interface{
 	GetByEmailUser(ctx context.Context, email string) (*models.User, error)
 	ListUser(ctx context.Context, page uint64) ([]*models.User, error)
 	UpdateUser(ctx context.Context, user *models.User) (error)
+	DeleteUser(ctx context.Context, id string) error
 	Close() error
 
 }
@@ -47,4 +48,8 @@ func ListUser(ctx context.Context, page uint64) ([]*models.User, error){
 
 func UpdateUser(ctx context.Context,  user *models.User) (error)  {
 	return implementation.UpdateUser(ctx, user)
+}
+
+func DeleteUser(ctx context.Context, id string) error{
+	return implementation.DeleteUser(ctx, id)
 }
