@@ -8,12 +8,15 @@ import (
 
 type Repo interface{
 	
+	//usuario
 	NewUser(ctx context.Context,  user *models.User) error
 	GetByIdUser(ctx context.Context, id string) (*models.User, error)
 	GetByEmailUser(ctx context.Context, email string) (*models.User, error)
 	ListUser(ctx context.Context, page uint64) ([]*models.User, error)
 	UpdateUser(ctx context.Context, user *models.User) (error)
 	DeleteUser(ctx context.Context, id string) error
+	//producto
+	NewProduct(ctx context.Context, product *models.Product) error
 	Close() error
 
 }
@@ -52,4 +55,8 @@ func UpdateUser(ctx context.Context,  user *models.User) (error)  {
 
 func DeleteUser(ctx context.Context, id string) error{
 	return implementation.DeleteUser(ctx, id)
+}
+
+func NewProduct(ctx context.Context, product *models.Product) (error){
+	return implementation.NewProduct(ctx, product)
 }

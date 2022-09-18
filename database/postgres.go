@@ -130,3 +130,8 @@ func  (repo *PostgresRepository) DeleteUser(ctx context.Context, id string) (err
 	_, err := repo.db.ExecContext(ctx, "DELETE FROM users WHERE id = $1", id)
 	return err
 }
+
+func(repo *PostgresRepository) NewProduct(ctx context.Context, product *models.Product) error{
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO product (id, name, price, stock, stockMin, description) VALUES ($1, $2, $3, $4, $5, $6)", product.Id, product.Name, product.Price, product.Stock, product.StockMin, product.Description)
+	return err
+}
