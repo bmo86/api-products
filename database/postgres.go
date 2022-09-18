@@ -132,6 +132,6 @@ func  (repo *PostgresRepository) DeleteUser(ctx context.Context, id string) (err
 }
 
 func(repo *PostgresRepository) NewProduct(ctx context.Context, product *models.Product) error{
-	_, err := repo.db.ExecContext(ctx, "INSERT INTO product (id, name, price, stock, stockMin, description) VALUES ($1, $2, $3, $4, $5, $6)", product.Id, product.Name, product.Price, product.Stock, product.StockMin, product.Description)
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO product (id, name, price, stock, stockMin, description, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", product.Id, product.Name, product.Price, product.Stock, product.StockMin, product.Description, product.UserId)
 	return err
 }

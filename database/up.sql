@@ -10,4 +10,16 @@ CREATE TABLE users (
     date_brithday TIMESTAMP NOT NULL DEFAULT NOW()   
 );
 
+DROP TABLE IF EXISTS product;
+
+CREATE TABLE product(
+    id VARCHAR(32) PRIMARY KEY, 
+    name VARCHAR(255) NOT NULL,
+    price NOT NULL,
+    stock INT NOT NULL,
+    stockMin INT NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+
+);
 
