@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS product;
 CREATE TABLE product(
     id VARCHAR(32) PRIMARY KEY, 
     name VARCHAR(255) NOT NULL,
-    price NOT NULL,
+    price FLOAT NOT NULL,
     stock INT NOT NULL,
     stockMin INT NOT NULL,
     description VARCHAR(255) NOT NULL,

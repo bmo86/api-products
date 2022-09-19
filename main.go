@@ -54,6 +54,8 @@ func BindRoutes(s server.Server, r *mux.Router){
 	api.HandleFunc("/users/{userID}", handlers.UpdateUserHandler(s)).Methods(http.MethodPut)
 	api.HandleFunc("/users/{userID}", handlers.DeleteUserHandler(s)).Methods(http.MethodDelete)
 	r.HandleFunc("/api/v1/users", handlers.ListUserHandler(s)).Methods(http.MethodGet)
+	//product
+	api.HandleFunc("/product", handlers.NewProductHandler(s)).Methods(http.MethodPost)
 
 	r.HandleFunc("/ws", s.Hub().HandlerWs)
 }

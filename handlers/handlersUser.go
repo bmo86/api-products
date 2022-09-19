@@ -212,6 +212,12 @@ func UpdateUserHandler( s server.Server) http.HandlerFunc  {
 			return
 		}
 
+		var MsgUser = models.WebSocketMsg{
+			Type: "User Created!",
+			Payload: updateUser,
+		}
+
+		s.Hub().BroadCast(MsgUser, nil)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(msgResponse{
 			Msg: "USER UPDATE =)",

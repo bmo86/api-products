@@ -32,7 +32,7 @@ func (repo *PostgresRepository) NewUser(ctx context.Context, user *models.User) 
 	return err
 }
 
-func(repo *PostgresRepository) GetByIdUser(ctx context.Context, id string) (*models.User, error){
+func (repo *PostgresRepository) GetByIdUser(ctx context.Context, id string) (*models.User, error){
 	rows, err := repo.db.QueryContext(ctx, "SELECT id, email FROM users WHERE id = $1", id)
 
 	if err != nil {
@@ -106,7 +106,7 @@ func (repo *PostgresRepository) ListUser(ctx context.Context, page uint64) ([]*m
 	for rows.Next() {
 		var user = models.User{}
 		
-		if err = rows.Scan(&user.Id, &user.Email, &user.Pass, &user.CreatedAt, &user.Name, &user.LastName, &user.DateBrithday); err != nil {
+		if err = rows.Scan(&user.Id, &user.Email, &user.Pass, &user.CreatedAt, &user.Name, &user.LastName, &user.DateBrithday); err == nil {
 			users = append(users, &user)
 		}
 	}
@@ -126,12 +126,20 @@ func (repo *PostgresRepository) UpdateUser(ctx context.Context,  user *models.Us
 	return err
 }
 
-func  (repo *PostgresRepository) DeleteUser(ctx context.Context, id string) (error){
+func (repo *PostgresRepository) DeleteUser(ctx context.Context, id string) (error){
 	_, err := repo.db.ExecContext(ctx, "DELETE FROM users WHERE id = $1", id)
 	return err
 }
 
-func(repo *PostgresRepository) NewProduct(ctx context.Context, product *models.Product) error{
+//product
+func (repo *PostgresRepository) NewProduct(ctx context.Context, product *models.Product) error{
 	_, err := repo.db.ExecContext(ctx, "INSERT INTO product (id, name, price, stock, stockMin, description, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", product.Id, product.Name, product.Price, product.Stock, product.StockMin, product.Description, product.UserId)
+	return err
+}
+
+func (repo *PostgresRepository) UpdateProduct(ctx context.Context, product *models.Product) (error){
+	var query string
+	query = "UPDATE product SET name = $1, price = $2, stock = $3, stockMin = $4,description = $5 WHERE id = $6"
+	_, err := repo.db.ExecContext(ctx, query, product.Name, product.Price, product.Stock, product.StockMin, product.Description)
 	return err
 }
