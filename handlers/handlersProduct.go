@@ -33,6 +33,9 @@ type MsgProduct struct{
 
 }
 
+type MsgResponse struct {
+	Msg 	string `json:"msg"`
+}
 
 func NewProductHandler( s server.Server ) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -141,19 +144,44 @@ func UpdateProductHandler( s server.Server ) http.HandlerFunc{
 			}
 			s.Hub().BroadCast(MsgProductWs, nil)
 			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MsgProduct{
-				Msg: 		"Update Product!",
-				Id: 		 idP["producID"],
-				Name: 		 productResquest.Name,
-				Price: 		 productResquest.Price, 
-				Stock: 		 productResquest.Stock,
-				StockMin: 	 productResquest.StockMin,
-				Description: productResquest.Description,
+			json.NewEncoder(w).Encode(msgResponse{
+				Msg: "Update product :D",
 			})
 
 		} else {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+
+	}
+}
+
+func DeleteProductHandler( s server.Server ) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := mux.Vars(r)
+
+		token, err := means.Token(s, w, r)
+		
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		if _, ok := token.Claims.(*models.AppClaims); ok && token.Valid{
+			err = repository.DeleteProduct(r.Context(), id["productID"])
+
+			if err != nil{
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(msgResponse{
+				Msg: "Delete Product :D",
+			})
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
 	}
 }
 

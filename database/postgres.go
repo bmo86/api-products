@@ -143,3 +143,8 @@ func (repo *PostgresRepository) UpdateProduct(ctx context.Context, product *mode
 	_, err := repo.db.ExecContext(ctx, query, product.Name, product.Price, product.Stock, product.StockMin, product.Description)
 	return err
 }
+
+func (repo *PostgresRepository) DeleteProduct(ctx context.Context, id string) (error){
+	_, err := repo.db.ExecContext(ctx, "DELETE FROM product WHERE id = $1", id)
+	return err
+}

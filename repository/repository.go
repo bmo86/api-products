@@ -18,6 +18,7 @@ type Repo interface{
 	//producto
 	NewProduct(ctx context.Context, product *models.Product) error
 	UpdateProduct(ctx context.Context, product *models.Product) (error)
+	DeleteProduct(ctx context.Context, id string) (error)
 	Close() error
 
 }
@@ -66,3 +67,8 @@ func NewProduct(ctx context.Context, product *models.Product) (error) {
 func UpdateProduct(ctx context.Context, product *models.Product) (error) {
 	return implementation.UpdateProduct(ctx, product)
 }
+
+func DeleteProduct(ctx context.Context, id string) (error){
+	return implementation.DeleteProduct(ctx, id)
+}
+
