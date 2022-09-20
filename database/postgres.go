@@ -148,3 +148,45 @@ func (repo *PostgresRepository) DeleteProduct(ctx context.Context, id string) (e
 	_, err := repo.db.ExecContext(ctx, "DELETE FROM product WHERE id = $1", id)
 	return err
 }
+
+func (repo *PostgresRepository) ListProduct(ctx context.Context, page uint64) ([]*models.Product, error){
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, price, stock, stockMin, description, user_id FROM product LIMIT $1 OFFSET $2",  5, page*5)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var products []*models.Product
+	
+	for rows.Next() {
+		var pro = models.Product{}
+		
+		err = rows.Scan(&pro.Id ,&pro.Name ,&pro.Price ,&pro.Stock ,&pro.StockMin ,&pro.Description ,&pro.UserId)
+
+		if err == nil {
+			products = append(products, &pro)
+		} 
+		
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return products, nil
+}
+
+
+
+
+
+
+
+

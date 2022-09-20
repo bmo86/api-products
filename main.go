@@ -47,10 +47,12 @@ func BindRoutes(s server.Server, r *mux.Router){
 
 	api.Use(middleware.CheckAuthMiddleware(s))
 
+	//login && singup
 	r.HandleFunc("/", handlers.HandlerHome(s)).Methods(http.MethodGet)
 	r.HandleFunc("/singup", handlers.SingUpHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/login", handlers.HandlerLogin(s)).Methods(http.MethodPost)
 	api.HandleFunc("/me", handlers.HandlerMe(s)).Methods(http.MethodGet)
+	//user
 	api.HandleFunc("/users/{userID}", handlers.UpdateUserHandler(s)).Methods(http.MethodPut)
 	api.HandleFunc("/users/{userID}", handlers.DeleteUserHandler(s)).Methods(http.MethodDelete)
 	r.HandleFunc("/api/v1/users", handlers.ListUserHandler(s)).Methods(http.MethodGet)
@@ -58,6 +60,7 @@ func BindRoutes(s server.Server, r *mux.Router){
 	api.HandleFunc("/product", handlers.NewProductHandler(s)).Methods(http.MethodPost)
 	api.HandleFunc("/product/{productID}", handlers.UpdateProductHandler(s)).Methods(http.MethodPut)
 	api.HandleFunc("/product/{productID}", handlers.DeleteProductHandler(s)).Methods(http.MethodDelete)
-	
+	r.HandleFunc("//api/v1/products", handlers.ListProductHandler(s)).Methods(http.MethodGet) 
+
 	r.HandleFunc("/ws", s.Hub().HandlerWs)
 }
